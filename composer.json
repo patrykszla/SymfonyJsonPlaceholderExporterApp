@@ -14,8 +14,11 @@
         "symfony/dotenv": "7.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
+        "symfony/http-client": "7.0.*",
         "symfony/runtime": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/twig-bundle": "7.0.*",
+        "symfony/yaml": "7.0.*",
+        "twbs/bootstrap": "^5.3"
     },
     "config": {
         "allow-plugins": {
@@ -51,10 +54,10 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts"
+            ""
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            ""
         ]
     },
     "conflict": {
@@ -66,5 +69,8 @@
             "require": "7.0.*",
             "docker": true
         }
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.58"
     }
 }

@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="child.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Hello Child</h1>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    $(function() {
+        console.log('Hello Child');
+    });
+</script>
+{% endblock %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+{% endblock %}
+{% block body %}
+<h1>block body</h1>
+{% endblock %}
+
