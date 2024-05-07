@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MainPageController extends AbstractController
 {
-    #[Route('/main/page', name: 'app_main_page')]
+    #[Route('/', name: 'app_main_page')]
     public function index(): JsonResponse
     {
         return $this->json([
