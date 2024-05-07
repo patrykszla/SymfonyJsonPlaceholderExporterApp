@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello JsonPlaceholderUsersController!{% endblock %}
+
+{% block body %}
+
+<div class="container text-center">
+    <h1>Hello</h1>
+    {{dump(json_users)}}
+    <table class="table">
+        <thead>
+            <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in json_users %}
+            <tr>
+                  <th scope="row">{{ user.id }}</th>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td><a href="/fetch-user-posts/{{ user.id }}" class="btn btn-primary">Fetch user posts</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+</div>
+{% endblock %}
