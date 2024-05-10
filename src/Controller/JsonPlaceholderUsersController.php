@@ -12,15 +12,13 @@ class JsonPlaceholderUsersController extends AbstractController
 {
     public function __construct(
         private FetchJsonPlaceholderHelper $jsonHelper,
-        private JsonPlaceholderUser $user
     )
     {
         
     }
 
-    
-    #[Route('/fetch-users', name: 'app_json_placeholder_users')]
-    public function index(JsonPlaceholderUser $jsonPlaceholderUser): Response
+    #[Route('/fetch-users_OLD', name: 'app_json_placeholder_users')]
+    public function index(): Response
     {
         $response = $this->jsonHelper->fetchUsers();
         return $this->render('json_placeholder_users/index.html.twig', [

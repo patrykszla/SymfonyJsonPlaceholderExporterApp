@@ -1,24 +1,24 @@
 {% extends "base.html.twig" %}
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="child.css">
+{% block title %}
+Main Page
 {% endblock %}
 
-{% block content %}
-    <h1>Hello Child</h1>
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="">
 {% endblock %}
 
 
 {% block javascript %}
-<script>
-    $(function() {
-        console.log('Hello Child');
-    });
-</script>
-{% endblock %}
-{% block scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 {% endblock %}
 {% block body %}
-<h1>block body</h1>
+<div class="container text-center">
+    <h1 class="text-center">Main page</h1>
+    <a href="/fetch-users" class="text-center btn btn-primary">Fetch Users</a>
+    <a href="/fetch-full-data" class="text-center btn btn-primary">Fetch Full Data</a>
+    <a href="/show-form" class="text-center btn btn-primary">Show Form</a>
+
+    {# <button type="button" class="btn btn-primary">Primary</button> #}
+
+</div>
 {% endblock %}
 

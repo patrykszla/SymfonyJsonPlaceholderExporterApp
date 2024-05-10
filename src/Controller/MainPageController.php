@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Helper\FetchJsonPlaceholderHelper;
 
@@ -20,10 +19,10 @@ class MainPageController extends AbstractController
     #[Route('/', name: 'app_main_page')]
     public function index(): Response
     {
-        $response = $this->jsonHelper->fetchJson();
+        // $response = $this->jsonHelper->fetchJson();
         // $response = $this->fetchJson();
         // dd($response);
-        return $this->render('main_page.html.twig');
+        return $this->render('index.html.twig');
 
     }
 }
