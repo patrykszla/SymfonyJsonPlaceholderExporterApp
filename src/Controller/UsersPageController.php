@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use App\Helper\FetchJsonPlaceholderHelper;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,7 +30,7 @@ class UsersPageController extends AbstractController
     }
 
     #[Route('/show-form', name: 'app_users_page')]
-    public function showForm(Request $request): Response
+    public function showForm(): Response
     {
         $user = new User();
         $user->setId(2);
@@ -42,13 +43,31 @@ class UsersPageController extends AbstractController
 
 
         $form = $this->createFormBuilder($user)
-            ->add('task', TextType::class)
+            // ->setAction($this->generateUrl('/submit_form'))
+            ->setMethod('POST')
+            ->add('name', TextType::class)
+            ->add('username', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('phone', TextType::class)
+            ->add('website', TextType::class)
             ->getForm();
 
         // $response = $this->jsonHelper->fetchUsers();
-        return $this->render('json_placeholder_users/index.html.twig', [
+        return $this->render('users_page/index.html.twig', [
             'user_form' => $form,
         ]);
     }
+
+    #[Route('/submit_form', name: 'app_submit_user_form')]
+    public function submitUserForm(Request $request): Response
+    {
+        dd($request);
+        // $response = $this->jsonHelper->fetchUsers();
+        // return $this->render('json_placeholder_users/index.html.twig', [
+        //     'json_users' => $response,
+        // ]);
+    }
+
+    
 
 }
