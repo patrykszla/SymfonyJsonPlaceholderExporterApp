@@ -17,34 +17,34 @@
         {# Pole 'username' #}
         <div>
             {{ form_label(user_form.username) }}
-            {{ form_widget(user_form.username) }}
+            {{ form_widget(user_form.username, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(user_form.username) }}
         </div>
 
         {# Pole 'email' #}
         <div>
             {{ form_label(user_form.email) }}
-            {{ form_widget(user_form.email) }}
+            {{ form_widget(user_form.email, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(user_form.email) }}
         </div>
 
         {# Pole 'phone' #}
         <div>
             {{ form_label(user_form.phone) }}
-            {{ form_widget(user_form.phone) }}
+            {{ form_widget(user_form.phone, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(user_form.phone) }}
         </div>
 
         {# Pole 'website' #}
         <div>
             {{ form_label(user_form.website) }}
-            {{ form_widget(user_form.website) }}
+            {{ form_widget(user_form.website, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(user_form.website) }}
         </div>
 
         {# Pole submit #}
-        <div>
-            <button type="submit">Submit</button>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
         </div>
 
     {{ form_end(user_form) }}
