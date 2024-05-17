@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Helper\FetchJsonPlaceholderHelper;
@@ -34,42 +35,43 @@ class UsersPageController extends AbstractController
     #[Route('/show-json-all-users-form', name: 'app_json_all_users_form')]
     public function showAllUsersForm(Request $request): Response 
     {
-        // Pobierz dane użytkowników
         $jsonUsers = $this->jsonHelper->fetchUsers();
         $forms = [];
 
-        // Tworzenie formularzy dla każdego użytkownika
         foreach ($jsonUsers as $index => $userData) {
-            $user = new User(); // Załóżmy, że masz encję User
-
-            // Ustawienie danych użytkownika w formularzu
+            $user = new User();
+            $user->setJsonId($userData['id']);
             $user->setName($userData['name']);
             $user->setUsername($userData['username']);
             $user->setEmail($userData['email']);
             $user->setPhone($userData['phone']);
             $user->setWebsite($userData['website']);
 
-            // Utworzenie formularza dla użytkownika
             $form = $this->createForm(UserType::class, $user, [
-                // 'action' => $this->generateUrl('app_users_page_submit'),
                 'method' => 'POST',
             ]);
 
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                // Obsługa przesłanego formularza
-                // Możesz tutaj dodać logikę zapisu użytkownika do bazy danych lub inną operację
-            }
-
-            // Dodanie utworzonego formularza do tablicy formularzy
             $forms[] = $form->createView();
         }
         // dd($forms);
-        return $this->render('users_page/save_users.html.twig', [
-            'user_forms' => $forms,
+        return $this->render('users_page/users_form.html.twig', [
+            'users_forms' => $forms,
         ]);
     }    
+
+    #[Route('/add_users', name: 'app_users_form_handle')]
+    public function handleUsersAdd(Request $request): Response {
+        $formData = $request->request;
+        dd($formData);
+
+        foreach ($formData as $user => $val) {
+
+        }
+
+        return $this->render('users_page/users_form.html.twig', [
+            'test' => 'test',
+        ]);
+    }
 
 
     #[Route('/show-form', name: 'app_users_page')]
