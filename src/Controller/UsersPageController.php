@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Helper\FetchJsonPlaceholderHelper;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\HttpFoundation\Request;
-
-use App\Helper\FetchJsonPlaceholderHelper;
-use App\Entity\User;
-use App\Form\UserType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UsersPageController extends AbstractController
 {
@@ -33,7 +34,7 @@ class UsersPageController extends AbstractController
     }
     
     #[Route('/show-json-all-users-form', name: 'app_json_all_users_form')]
-    public function showAllUsersForm(Request $request): Response 
+    public function showAllUsersForm(): Response 
     {
         $jsonUsers = $this->jsonHelper->fetchUsers();
         $forms = [];
@@ -54,26 +55,44 @@ class UsersPageController extends AbstractController
             $forms[] = $form->createView();
         }
         // dd($forms);
+        $formAction = $this->generateUrl('app_users_form_handle');
+
         return $this->render('users_page/users_form.html.twig', [
             'users_forms' => $forms,
+            'form_action' => $formAction
         ]);
-    }    
+    }
+        
 
     #[Route('/add_users', name: 'app_users_form_handle')]
-    public function handleUsersAdd(Request $request): Response {
-        $formData = $request->request;
-        dd($formData);
+    public function handleUsersAdd(Request $request, EntityManagerInterface $entityManager): Response {
+        $formData = $request->request->all();
+        // dd($formData);
 
-        foreach ($formData as $user => $val) {
+        foreach ($formData['users'] as $userData) {
+            $user = new User();
+            $user->setJsonId($userData['json_id']);
+            $user->setName($userData['name']);
+            $user->setUsername($userData['username']);
+            $user->setEmail($userData['email']);
+            $user->setPhone($userData['phone']);
+            $user->setWebsite($userData['website']);
+
+            $entityManager->persist($user);
 
         }
+            $entityManager->flush();
 
-        return $this->render('users_page/users_form.html.twig', [
-            'test' => 'test',
-        ]);
+            $userRepository = $entityManager->getRepository(User::class);
+            $users = $userRepository->findAll();
+
+            dd($users);
+            return $this->redirectToRoute('app_users_list');
     }
 
 
+
+    //test
     #[Route('/show-form', name: 'app_users_page')]
     public function showForm(): Response
     {
@@ -100,7 +119,7 @@ class UsersPageController extends AbstractController
             'user_form' => $form,
         ]);
     }
-
+    
 
     #[Route('/submit-form', name: 'app_submit_user_form')]
     public function submitUserForm(Request $request): Response
