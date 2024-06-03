@@ -12,7 +12,7 @@
             {% for form in users_forms %}
                 <div class='mt-5'>
                     <h3>New User</h3>
-                    {{ form_row(form.json_id, { 'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][json_id]" }) }}
+                    {{ form_row(form.json_id, { 'attr': {'class': 'form-control',  'readonly': 'readonly'}, 'full_name': "users[" ~ count ~ "][json_id]" }) }}
                     {{ form_row(form.name, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][name]"}) }}
                     {{ form_row(form.username, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][username]"}) }}
                     {{ form_row(form.email, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][email]"}) }}

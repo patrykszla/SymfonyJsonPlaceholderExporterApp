@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello JsonPlaceholderUsersController!{% endblock %}
+
+{% block body %}
+<div class="container text-center">
+    <h1>Users</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                {# {% for header in table_headers %}
+                    <th>{{ header }}</th>
+                {% endfor %} #}
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user.id }}</th>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td><a href="/user/edit/{{ user.id }}" class="btn btn-primary">edit user</a></td>
+                </tr>
+            {% endfor %} #
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_json_all_users_form') }}" class="btn btn-primary">Save all users</a>
+    
+
+</div>
+{% endblock %}

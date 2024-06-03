@@ -54,7 +54,7 @@ class UsersPageController extends AbstractController
 
             $forms[] = $form->createView();
         }
-        // dd($forms);
+
         $formAction = $this->generateUrl('app_users_form_handle');
 
         return $this->render('users_page/users_form.html.twig', [
@@ -83,10 +83,10 @@ class UsersPageController extends AbstractController
         }
             $entityManager->flush();
 
-            $userRepository = $entityManager->getRepository(User::class);
-            $users = $userRepository->findAll();
+            // $userRepository = $entityManager->getRepository(User::class);
+            // $users = $userRepository->findAll();
 
-            dd($users);
+            // dd($users);
             return $this->redirectToRoute('app_users_list');
     }
 
@@ -120,7 +120,36 @@ class UsersPageController extends AbstractController
         ]);
     }
     
+    #[Route('/users', name: 'app_users_list')]
+    public function showUsersList(EntityManagerInterface $entityManager): Response
+    {
+        $userRepository = $entityManager->getRepository(User::class);
+        $users = $userRepository->findAll();
 
+        // $response = $this->jsonHelper->fetchUsers();
+        $tableHead = array('#', 'name', 'email', 'actions');
+        return $this->render('users_page/users_list.html.twig', [
+            // 'table_headers' => $tableHead,
+            'users' => $users
+        ]);
+    }
+    
+    #[Route('/user/edit/{id}', name: 'app_user_edit')]
+    public function showUserForm(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $userRepository = $entityManager->getRepository(User::class);
+        $userData = $userRepository->find($id);
+        dd($userData);
+        // $response = $this->jsonHelper->fetchUsers();
+        // $tableHead = array('#', 'name', 'email', 'actions');
+        // return $this->render('users_page/users_list.html.twig', [
+        //     // 'table_headers' => $tableHead,
+        //     'users' => $users
+        // ]);
+    }
+
+
+    //to delete
     #[Route('/submit-form', name: 'app_submit_user_form')]
     public function submitUserForm(Request $request): Response
     {
