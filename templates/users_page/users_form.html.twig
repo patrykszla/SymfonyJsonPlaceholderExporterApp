@@ -6,6 +6,7 @@
 <div class="container form-group">
     <h1 class="text-center">All users</h1>
    <div>
+   {{dump(users_forms)}}
         {# <form action="{{ path({{'app_users_form_handle'}}) }}" method="POST"> #}
             <form action="{{ form_action }}" method="POST">
             {% set count = 1 %}

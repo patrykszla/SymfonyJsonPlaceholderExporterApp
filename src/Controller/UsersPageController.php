@@ -137,9 +137,52 @@ class UsersPageController extends AbstractController
     #[Route('/user/edit/{id}', name: 'app_user_edit')]
     public function showUserForm(int $id, EntityManagerInterface $entityManager): Response
     {
+        echo ini_get('memory_limit');
+        ini_set('memory_limit', '512M');
+
+        // die();
         $userRepository = $entityManager->getRepository(User::class);
+        dd($userRepository);
         $userData = $userRepository->find($id);
-        dd($userData);
+        if (!$userData) {
+            throw $this->createNotFoundException('No user found for id '.$id);
+        }
+
+        $user = new User();
+        $user->setJsonId($userData->getJsonId());
+        $user->setName($userData->getName());
+        $user->setUsername($userData->getUsername());
+        $user->setEmail($userData->getEmail());
+        $user->setPhone($userData->getPhone());
+        $user->setWebsite($userData->getWebsite());
+
+        $form = $this->createForm(UserType::class, $user, [
+            'method' => 'POST',
+        ]);
+
+        $forms = $form->createView();
+
+
+       
+        // dd($user);
+
+        
+
+        // $form = $this->createForm(UserType::class, $user, [
+        //     'method' => 'POST',
+        // ]);
+
+        // $form = $form->createView();
+
+        $formAction = $this->generateUrl('app_users_form_handle');
+
+        return $this->render('users_page/users_form.html.twig', [
+            'users_forms' => $forms,
+            'form_action' => $formAction
+        ]);
+
+
+
         // $response = $this->jsonHelper->fetchUsers();
         // $tableHead = array('#', 'name', 'email', 'actions');
         // return $this->render('users_page/users_list.html.twig', [
