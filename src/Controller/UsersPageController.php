@@ -25,11 +25,15 @@ class UsersPageController extends AbstractController
     }
 
     #[Route('/fetch-json-users', name: 'app_users_page_fetch')]
-    public function showJsonUsers(): Response 
+    public function showJsonUsers(Request $request): Response 
     {
         $jsonUsers = $this->jsonHelper->fetchUsers();
-        return $this->render('json_placeholder_users/index.html.twig', [
-            'json_users' => $jsonUsers,
+        $currentRoute = $request->attributes->get('_route');
+
+        return $this->render('users_page/users_list.html.twig', [
+            'users' => $jsonUsers,
+            'retreived_from_db' => false,
+            'current_page_from_controller' => $currentRoute
         ]);
     }
     
@@ -38,7 +42,7 @@ class UsersPageController extends AbstractController
     {
         $jsonUsers = $this->jsonHelper->fetchUsers();
         $forms = [];
-
+        // dd($jsonUsers);
         foreach ($jsonUsers as $index => $userData) {
             $user = new User();
             $user->setJsonId($userData['id']);
@@ -67,8 +71,6 @@ class UsersPageController extends AbstractController
     #[Route('/add_users', name: 'app_users_form_handle')]
     public function handleUsersAdd(Request $request, EntityManagerInterface $entityManager): Response {
         $formData = $request->request->all();
-        // dd($formData);
-
         foreach ($formData['users'] as $userData) {
             $user = new User();
             $user->setJsonId($userData['json_id']);
@@ -79,70 +81,34 @@ class UsersPageController extends AbstractController
             $user->setWebsite($userData['website']);
 
             $entityManager->persist($user);
-
         }
-            $entityManager->flush();
 
-            // $userRepository = $entityManager->getRepository(User::class);
-            // $users = $userRepository->findAll();
-
-            // dd($users);
-            return $this->redirectToRoute('app_users_list');
+        $entityManager->flush();
+        return $this->redirectToRoute('app_users_list');
     }
 
-
-
-    //test
-    #[Route('/show-form', name: 'app_users_page')]
-    public function showForm(): Response
-    {
-        $user = new User();
-        $user->setId(2);
-        $user->setJsonId(2333);
-        $user->setName('Patryk');
-        $user->setUsername('TESTOWE USERNAME');
-        $user->setEmail('test@email.com');
-        $user->setPhone('222222');
-        $user->setWebsite('testowa website');
-
-        $form = $this->createFormBuilder($user)
-            ->setMethod('POST')
-            ->add('name', TextType::class)
-            ->add('username', TextType::class)
-            ->add('email', EmailType::class)
-            ->add('phone', TextType::class)
-            ->add('website', TextType::class)
-            ->getForm();
-
-        // $response = $this->jsonHelper->fetchUsers();
-        return $this->render('users_page/index.html.twig', [
-            'user_form' => $form,
-        ]);
-    }
-    
     #[Route('/users', name: 'app_users_list')]
-    public function showUsersList(EntityManagerInterface $entityManager): Response
+    public function showUsersList(EntityManagerInterface $entityManager, Request $request): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
         $users = $userRepository->findAll();
+        $currentRoute = $request->attributes->get('_route');
 
         // $response = $this->jsonHelper->fetchUsers();
         $tableHead = array('#', 'name', 'email', 'actions');
         return $this->render('users_page/users_list.html.twig', [
             // 'table_headers' => $tableHead,
-            'users' => $users
+            'users' => $users,
+            'retreived_from_db' => true,
+            'current_page_from_controller' => $currentRoute
         ]);
     }
     
     #[Route('/user/edit/{id}', name: 'app_user_edit')]
     public function showUserForm(int $id, EntityManagerInterface $entityManager): Response
     {
-        echo ini_get('memory_limit');
-        ini_set('memory_limit', '512M');
-
-        // die();
         $userRepository = $entityManager->getRepository(User::class);
-        dd($userRepository);
+        // dd($userRepository);
         $userData = $userRepository->find($id);
         if (!$userData) {
             throw $this->createNotFoundException('No user found for id '.$id);
@@ -168,12 +134,6 @@ class UsersPageController extends AbstractController
 
         
 
-        // $form = $this->createForm(UserType::class, $user, [
-        //     'method' => 'POST',
-        // ]);
-
-        // $form = $form->createView();
-
         $formAction = $this->generateUrl('app_users_form_handle');
 
         return $this->render('users_page/users_form.html.twig', [
@@ -181,27 +141,9 @@ class UsersPageController extends AbstractController
             'form_action' => $formAction
         ]);
 
-
-
-        // $response = $this->jsonHelper->fetchUsers();
-        // $tableHead = array('#', 'name', 'email', 'actions');
-        // return $this->render('users_page/users_list.html.twig', [
-        //     // 'table_headers' => $tableHead,
-        //     'users' => $users
-        // ]);
     }
 
 
-    //to delete
-    #[Route('/submit-form', name: 'app_submit_user_form')]
-    public function submitUserForm(Request $request): Response
-    {
-        dd($request);
-        // $response = $this->jsonHelper->fetchUsers();
-        // return $this->render('json_placeholder_users/index.html.twig', [
-        //     'json_users' => $response,
-        // ]);
-    }
 
     
 
