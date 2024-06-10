@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% set current_page = 'test' %}
+
 {% block title %}User form{% endblock %}
 
 {% block body %}
 <div class="container form-group">
     <h1 class="text-center">All users</h1>
    <div>
-   {{dump(users_forms)}}
+   {# {{dump(users_forms)}} #}
         {# <form action="{{ path({{'app_users_form_handle'}}) }}" method="POST"> #}
             <form action="{{ form_action }}" method="POST">
             {% set count = 1 %}

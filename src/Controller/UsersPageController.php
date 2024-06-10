@@ -107,8 +107,8 @@ class UsersPageController extends AbstractController
     #[Route('/user/edit/{id}', name: 'app_user_edit')]
     public function showUserForm(int $id, EntityManagerInterface $entityManager): Response
     {
+
         $userRepository = $entityManager->getRepository(User::class);
-        // dd($userRepository);
         $userData = $userRepository->find($id);
         if (!$userData) {
             throw $this->createNotFoundException('No user found for id '.$id);
@@ -126,23 +126,30 @@ class UsersPageController extends AbstractController
             'method' => 'POST',
         ]);
 
-        $forms = $form->createView();
+        $forms[] = $form->createView();
 
-
-       
-        // dd($user);
-
-        
-
-        $formAction = $this->generateUrl('app_users_form_handle');
-
+        $formAction = $this->generateUrl('app_user_edit_handle', ['id' => $id]);
+        // dd($formAction)
         return $this->render('users_page/users_form.html.twig', [
             'users_forms' => $forms,
-            'form_action' => $formAction
+            'form_action' => $formAction,
+            'current_page_from_controller' => 'test'
         ]);
 
     }
 
+    #[Route('/user/edit/{id}', name: 'app_user_edit_handle', methods: ['POST'])]
+    public function handleUserForm(int $id, Request $request): Response
+    {
+        // add handle user edit!
+        dd($request);
+        return $this->render('users_page/users_form.html.twig', [
+            'users_forms' => "test",
+            'form_action' => 'TEST',
+            'current_page_from_controller' => 'test'
+        ]);
+    }
+    
 
 
     
