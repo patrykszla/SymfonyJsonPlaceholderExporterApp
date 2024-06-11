@@ -93,7 +93,6 @@ class UsersPageController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
         $users = $userRepository->findAll();
         $currentRoute = $request->attributes->get('_route');
-
         // $response = $this->jsonHelper->fetchUsers();
         $tableHead = array('#', 'name', 'email', 'actions');
         return $this->render('users_page/users_list.html.twig', [
@@ -104,8 +103,8 @@ class UsersPageController extends AbstractController
         ]);
     }
     
-    #[Route('/user/edit/{id}', name: 'app_user_edit')]
-    public function showUserForm(int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/user/edit/{id}', name: 'app_user_edit',  methods: ['GET', 'POST'])]
+    public function showUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
 
         $userRepository = $entityManager->getRepository(User::class);
@@ -114,37 +113,23 @@ class UsersPageController extends AbstractController
             throw $this->createNotFoundException('No user found for id '.$id);
         }
 
-        $user = new User();
-        $user->setJsonId($userData->getJsonId());
-        $user->setName($userData->getName());
-        $user->setUsername($userData->getUsername());
-        $user->setEmail($userData->getEmail());
-        $user->setPhone($userData->getPhone());
-        $user->setWebsite($userData->getWebsite());
 
-
-        $formAction = '';
-        $form = $this->createForm(UserType::class, $user, [
+        $formAction = $this->generateUrl('app_user_edit', ['id' => $id]);
+        $form = $this->createForm(UserType::class, $userData, [
             'method' => 'POST',
-            'action' => $this->generateUrl('app_user_edit', ['id' => $id])
+            // 'action' => $this->generateUrl('app_user_edit_handle', ['id' => $id])
         ]);
 
-        $forms[] = $form->createView();
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            // dd('JEST POST');
+        }
 
-        // dd($form->isSubmitted());
         if ($form->isSubmitted()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            // $task = $form->getData();
-
-            // ... perform some action, such as saving the task to the database
-
-            // return $this->redirectToRoute('task_success');
             dd('JEST SUBMITed');
         }
-        // dd($forms);
-        
-        // dd($formAction)
+        $forms[] = $form->createView();
+
         return $this->render('users_page/users_form.html.twig', [
             'users_forms' => $forms,
             'form_action' => $formAction,
@@ -153,17 +138,18 @@ class UsersPageController extends AbstractController
 
     }
 
-    #[Route('/user/edit/{id}', name: 'app_user_edit_handle', methods: ['POST'])]
-    public function handleUserForm(int $id, Request $request): Response
-    {
-        // add handle user edit!
-        dd($request);
-        return $this->render('users_page/users_form.html.twig', [
-            'users_forms' => "test",
-            'form_action' => 'TEST',
-            'current_page_from_controller' => 'test'
-        ]);
-    }
+    // #[Route('/user/handle-edit/{id}', name: 'app_user_edit_handle', methods: ['POST'])]
+    // public function handleUserForm(int $id, Request $request): Response
+    // {
+    //     // add handle user edit!
+    //     // dd("HANDLE USER EDIT!!");
+    //     dd($request);
+    //     return $this->render('users_page/users_form.html.twig', [
+    //         'users_forms' => "test",
+    //         'form_action' => 'TEST',
+    //         'current_page_from_controller' => 'test'
+    //     ]);
+    // }
     
 
 

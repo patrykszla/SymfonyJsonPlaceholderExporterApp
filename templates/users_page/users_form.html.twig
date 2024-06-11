@@ -6,22 +6,19 @@
 
 {% block body %}
 <div class="container form-group">
-    <h1 class="text-center">All users</h1>
+    <h1 class="text-center">Users</h1>
    <div>
-        {# {{ form_start(users_forms[0]) }} #}
-        <form action="{{ path('app_users_form_handle') }}" method="POST">
-            {# <form action="{{ form_action }}" method="POST"> #}
+        <form action="{{ form_action }}" method="POST">
             {% set count = 1 %}
             {% for form in users_forms %}
                 <div class='mt-5'>
-                    <h3>New User</h3>
+                    <h3>User</h3>
                     {{ form_row(form.json_id, { 'attr': {'class': 'form-control',  'readonly': 'readonly'}, 'full_name': "users[" ~ count ~ "][json_id]" }) }}
                     {{ form_row(form.name, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][name]"}) }}
                     {{ form_row(form.username, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][username]"}) }}
                     {{ form_row(form.email, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][email]"}) }}
                     {{ form_row(form.phone, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][phone]"}) }}
                     {{ form_row(form.website, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][website]"}) }}
-                    
                 </div>
                 {% set count = count + 1 %}
             {% endfor %}
@@ -29,11 +26,6 @@
                 <button type="submit" class="btn btn-primary mt-3 mb-3 w-25">Save</button>
             </div>
         </form>
-        {# {{ form_end(users_forms[0]) }} #}
     </div>
-
-
-
-    
 </div>
 {% endblock %}

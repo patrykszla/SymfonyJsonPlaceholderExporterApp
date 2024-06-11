@@ -5,14 +5,14 @@
     </button>
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav d-flex mx-auto">
-            <li class="nav-item {% if current_page == 'home' %}active{% endif %}">
-                <a class="nav-link" href="/">Home</a>
+            <li class="nav-item">
+                <a class="nav-link {% if current_page == 'home' %}active{% endif %}" href="/">Home</a>
             </li>
-            <li class="nav-item {% if current_page == 'users' %}active{% endif %}">
-                <a class="nav-link" href="/users">Users List</a>
+            <li class="nav-item ">
+                <a class="nav-link {% if current_page == 'app_users_list'  %}active{% endif %}" href="/users">Users List</a>
             </li>
-            <li class="nav-item {% if current_page == 'fetch-json-users' %}active{% endif %}">
-                <a class="nav-link" href="/fetch-json-users">Json Users List</a>
+            <li class="nav-item ">
+                <a class="nav-link {% if current_page == 'app_users_page_fetch' %}active{% endif %}" href="/fetch-json-users">Json Users List</a>
             </li>
             <!-- Dodaj tutaj więcej linków do menu -->
         </ul>
