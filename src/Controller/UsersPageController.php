@@ -122,13 +122,28 @@ class UsersPageController extends AbstractController
         $user->setPhone($userData->getPhone());
         $user->setWebsite($userData->getWebsite());
 
+
+        $formAction = '';
         $form = $this->createForm(UserType::class, $user, [
             'method' => 'POST',
+            'action' => $this->generateUrl('app_user_edit', ['id' => $id])
         ]);
 
         $forms[] = $form->createView();
 
-        $formAction = $this->generateUrl('app_user_edit_handle', ['id' => $id]);
+        // dd($form->isSubmitted());
+        if ($form->isSubmitted()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            // $task = $form->getData();
+
+            // ... perform some action, such as saving the task to the database
+
+            // return $this->redirectToRoute('task_success');
+            dd('JEST SUBMITed');
+        }
+        // dd($forms);
+        
         // dd($formAction)
         return $this->render('users_page/users_form.html.twig', [
             'users_forms' => $forms,

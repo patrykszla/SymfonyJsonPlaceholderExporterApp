@@ -8,9 +8,9 @@
 <div class="container form-group">
     <h1 class="text-center">All users</h1>
    <div>
-   {# {{dump(users_forms)}} #}
-        {# <form action="{{ path({{'app_users_form_handle'}}) }}" method="POST"> #}
-            <form action="{{ form_action }}" method="POST">
+        {# {{ form_start(users_forms[0]) }} #}
+        <form action="{{ path('app_users_form_handle') }}" method="POST">
+            {# <form action="{{ form_action }}" method="POST"> #}
             {% set count = 1 %}
             {% for form in users_forms %}
                 <div class='mt-5'>
@@ -29,6 +29,7 @@
                 <button type="submit" class="btn btn-primary mt-3 mb-3 w-25">Save</button>
             </div>
         </form>
+        {# {{ form_end(users_forms[0]) }} #}
     </div>
 
 
