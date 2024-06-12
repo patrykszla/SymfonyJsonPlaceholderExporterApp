@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Address;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Helper\FetchJsonPlaceholderHelper;
@@ -51,6 +52,13 @@ class UsersPageController extends AbstractController
             $user->setEmail($userData['email']);
             $user->setPhone($userData['phone']);
             $user->setWebsite($userData['website']);
+            
+            $address = new Address();
+            $address->setStreet($userData['address']['street']);
+            $address->setSuite($userData['address']['suite']);
+            $address->setCity($userData['address']['city']);
+            $address->setZipcode($userData['address']['zipcode']);
+            $user->setAddress($address);
 
             $form = $this->createForm(UserType::class, $user, [
                 'method' => 'POST',
@@ -94,51 +102,12 @@ class UsersPageController extends AbstractController
         $users = $userRepository->findAll();
         $currentRoute = $request->attributes->get('_route');
         // $response = $this->jsonHelper->fetchUsers();
-        $tableHead = array('#', 'name', 'email', 'actions');
         return $this->render('users_page/users_list.html.twig', [
             // 'table_headers' => $tableHead,
             'users' => $users,
             'retreived_from_db' => true,
             'current_page_from_controller' => $currentRoute
         ]);
-    }
-    
-    #[Route('/OLDuser/edit/{id}', name: 'app_user_edit',  methods: ['GET', 'POST'])]
-    public function OldshowUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
-    {
-
-        $userRepository = $entityManager->getRepository(User::class);
-        $userData = $userRepository->find($id);
-        if (!$userData) {
-            throw $this->createNotFoundException('No user found for id '.$id);
-        }
-
-
-        $formAction = $this->generateUrl('app_user_edit', ['id' => $id]);
-        $form = $this->createForm(UserType::class, $userData, [
-            'method' => 'POST',
-            // 'action' => $this->generateUrl('app_user_edit_handle', ['id' => $id])
-        ]);
-
-        $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            $data = $form->getData();
-            dd($userData);
-
-        }
-
-        if ($form->isSubmitted()) {
-            dd('JEST SUBMITed');
-        }
-        $forms[] = $form->createView();
-
-        return $this->render('users_page/users_form.html.twig', [
-            'form_type' => 'one',
-            'users_forms' => $forms,
-            'form_action' => $formAction,
-            'current_page_from_controller' => 'test'
-        ]);
-
     }
 
     #[Route('/user/edit/{id}', name: 'app_user_edit')]
@@ -156,6 +125,7 @@ class UsersPageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($user);
             $entityManager->flush();
+            $this->addFlash('success', 'User updated successfully!');
 
             return $this->redirectToRoute('app_users_list');
         }
@@ -164,24 +134,5 @@ class UsersPageController extends AbstractController
             'user_form' => $form->createView(),
         ]);
     }
-
-
-
-    // #[Route('/user/handle-edit/{id}', name: 'app_user_edit_handle', methods: ['POST'])]
-    // public function handleUserForm(int $id, Request $request): Response
-    // {
-    //     // add handle user edit!
-    //     // dd("HANDLE USER EDIT!!");
-    //     dd($request);
-    //     return $this->render('users_page/users_form.html.twig', [
-    //         'users_forms' => "test",
-    //         'form_action' => 'TEST',
-    //         'current_page_from_controller' => 'test'
-    //     ]);
-    // }
-    
-
-
-    
 
 }

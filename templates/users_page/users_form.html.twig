@@ -8,18 +8,23 @@
 <div class="container form-group">
     <h1 class="text-center">Users</h1>
    <div>
-        {# if($form) #}
+
         <form action="{{ form_action }}" method="POST">
             {% set count = 1 %}
             {% for form in users_forms %}
                 <div class='mt-5'>
-                    <h3>User</h3>
+                    <h3 >User</h3>
                     {{ form_row(form.json_id, { 'attr': {'class': 'form-control',  'readonly': 'readonly'}, 'full_name': "users[" ~ count ~ "][json_id]" }) }}
                     {{ form_row(form.name, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][name]"}) }}
                     {{ form_row(form.username, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][username]"}) }}
                     {{ form_row(form.email, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][email]"}) }}
                     {{ form_row(form.phone, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][phone]"}) }}
                     {{ form_row(form.website, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][website]"}) }}
+                    <h5 class="pt-2">User Address</h5>
+                    {{ form_row(form.address.street, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][address][street]"}) }}
+                    {{ form_row(form.address.suite, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][address][suite]"}) }}
+                    {{ form_row(form.address.city, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][address][city]"}) }}
+                    {{ form_row(form.address.zipcode, {'attr': {'class': 'form-control'}, 'full_name': "users[" ~ count ~ "][address][zipcode]"}) }}
                 </div>
                 {% set count = count + 1 %}
             {% endfor %}
