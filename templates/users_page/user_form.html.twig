@@ -6,10 +6,23 @@
 
 {% block body %}
 <div class="container form-group">
-    <h1 class="text-center">Users</h1>
+    <h1 class="text-center">Edit User</h1>
    <div>
-        {# if($form) #}
-        <form action="{{ form_action }}" method="POST">
+    {{ form_start(user_form) }}
+            {{ form_row(user_form.name) }}
+            {{ form_row(user_form.username) }}
+            {{ form_row(user_form.email) }}
+            {{ form_row(user_form.phone) }}
+            {{ form_row(user_form.website) }}
+            <h2>Address</h2>
+            {# {{ form_row(user_form.address.street) }} #}
+            {# {{ form_row(user_form.address.suite) }} #}
+            {# {{ form_row(user_form.address.city) }} #}
+            {# {{ form_row(user_form.address.zipcode) }} #}
+            <button type="submit" class="btn btn-primary">Save</button>
+    {{ form_end(user_form) }}
+    
+        {# <form action="{{ form_action }}" method="POST">
             {% set count = 1 %}
             {% for form in users_forms %}
                 <div class='mt-5'>
@@ -26,7 +39,7 @@
             <div class="text-center">
                 <button type="submit" class="btn btn-primary mt-3 mb-3 w-25">Save</button>
             </div>
-        </form>
+        </form> #}
     </div>
 </div>
 {% endblock %}

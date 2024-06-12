@@ -12,7 +12,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('json_id')
+            // ->add('json_id')
             ->add('name')
             ->add('username')
             ->add('email')

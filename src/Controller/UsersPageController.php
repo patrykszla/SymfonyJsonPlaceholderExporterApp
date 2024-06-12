@@ -103,8 +103,8 @@ class UsersPageController extends AbstractController
         ]);
     }
     
-    #[Route('/user/edit/{id}', name: 'app_user_edit',  methods: ['GET', 'POST'])]
-    public function showUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/OLDuser/edit/{id}', name: 'app_user_edit',  methods: ['GET', 'POST'])]
+    public function OldshowUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
 
         $userRepository = $entityManager->getRepository(User::class);
@@ -122,7 +122,9 @@ class UsersPageController extends AbstractController
 
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
-            // dd('JEST POST');
+            $data = $form->getData();
+            dd($userData);
+
         }
 
         if ($form->isSubmitted()) {
@@ -131,12 +133,39 @@ class UsersPageController extends AbstractController
         $forms[] = $form->createView();
 
         return $this->render('users_page/users_form.html.twig', [
+            'form_type' => 'one',
             'users_forms' => $forms,
             'form_action' => $formAction,
             'current_page_from_controller' => 'test'
         ]);
 
     }
+
+    #[Route('/user/edit/{id}', name: 'app_user_edit')]
+    public function showUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $userRepository = $entityManager->getRepository(User::class);
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException('No user found for id ' . $id);
+        }
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_users_list');
+        }
+
+        return $this->render('users_page/user_form.html.twig', [
+            'user_form' => $form->createView(),
+        ]);
+    }
+
+
 
     // #[Route('/user/handle-edit/{id}', name: 'app_user_edit_handle', methods: ['POST'])]
     // public function handleUserForm(int $id, Request $request): Response

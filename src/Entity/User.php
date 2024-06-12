@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Address;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -31,6 +33,9 @@ class User
 
     #[ORM\Column(length: 100)]
     private ?string $website = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Address::class, cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
 
     public function getId(): ?int
     {
@@ -112,6 +117,23 @@ class User
     public function setWebsite(string $website): static
     {
         $this->website = $website;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        // set the owning side of the relation if necessary
+        if ($address !== null && $address->getUser() !== $this) {
+            $address->setUser($this);
+        }
+
+        $this->address = $address;
 
         return $this;
     }
