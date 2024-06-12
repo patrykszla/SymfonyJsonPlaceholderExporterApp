@@ -19,9 +19,6 @@ class MainPageController extends AbstractController
     #[Route('/', name: 'app_main_page')]
     public function index(): Response
     {
-        // $response = $this->jsonHelper->fetchJson();
-        // $response = $this->fetchJson();
-        // dd($response);
         return $this->render('index.html.twig');
 
     }

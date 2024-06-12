@@ -39,11 +39,11 @@ class UsersPageController extends AbstractController
     }
     
     #[Route('/show-json-all-users-form', name: 'app_json_all_users_form')]
-    public function showAllUsersForm(): Response 
+    public function showAllUsersForm(Request $request): Response 
     {
         $jsonUsers = $this->jsonHelper->fetchUsers();
         $forms = [];
-        // dd($jsonUsers);
+        
         foreach ($jsonUsers as $index => $userData) {
             $user = new User();
             $user->setJsonId($userData['id']);
@@ -68,10 +68,10 @@ class UsersPageController extends AbstractController
         }
 
         $formAction = $this->generateUrl('app_users_form_handle');
-
         return $this->render('users_page/users_form.html.twig', [
             'users_forms' => $forms,
-            'form_action' => $formAction
+            'form_action' => $formAction,
+            'current_page_from_controller' => $request->attributes->get('_route')
         ]);
     }
         
@@ -79,6 +79,7 @@ class UsersPageController extends AbstractController
     #[Route('/add_users', name: 'app_users_form_handle')]
     public function handleUsersAdd(Request $request, EntityManagerInterface $entityManager): Response {
         $formData = $request->request->all();
+        // dd($formData);
         foreach ($formData['users'] as $userData) {
             $user = new User();
             $user->setJsonId($userData['json_id']);
@@ -87,6 +88,12 @@ class UsersPageController extends AbstractController
             $user->setEmail($userData['email']);
             $user->setPhone($userData['phone']);
             $user->setWebsite($userData['website']);
+            $address = new Address();
+            $address->setStreet($userData['address']['street']);
+            $address->setSuite($userData['address']['suite']);
+            $address->setCity($userData['address']['city']);
+            $address->setZipcode($userData['address']['zipcode']);
+            $user->setAddress($address);
 
             $entityManager->persist($user);
         }
@@ -101,9 +108,7 @@ class UsersPageController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
         $users = $userRepository->findAll();
         $currentRoute = $request->attributes->get('_route');
-        // $response = $this->jsonHelper->fetchUsers();
         return $this->render('users_page/users_list.html.twig', [
-            // 'table_headers' => $tableHead,
             'users' => $users,
             'retreived_from_db' => true,
             'current_page_from_controller' => $currentRoute
