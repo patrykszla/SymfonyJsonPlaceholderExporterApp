@@ -25,6 +25,7 @@
                     <td>
                     {% if retreived_from_db == true %}
                         <a href="/user/edit/{{ user.id }}" class="btn btn-primary">Edit user</a>
+                        <a href="/posts/user/{{ user.id }}" class="btn btn-primary">Show user posts</a>
                     {% endif %}
                 </tr>
             {% endfor %}

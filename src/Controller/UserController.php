@@ -11,12 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class UsersPageController extends AbstractController
+class UserController extends AbstractController
 {
     public function __construct(
         private FetchJsonPlaceholderHelper $jsonHelper,
@@ -81,21 +78,29 @@ class UsersPageController extends AbstractController
         $formData = $request->request->all();
         // dd($formData);
         foreach ($formData['users'] as $userData) {
-            $user = new User();
-            $user->setJsonId($userData['json_id']);
-            $user->setName($userData['name']);
-            $user->setUsername($userData['username']);
-            $user->setEmail($userData['email']);
-            $user->setPhone($userData['phone']);
-            $user->setWebsite($userData['website']);
-            $address = new Address();
-            $address->setStreet($userData['address']['street']);
-            $address->setSuite($userData['address']['suite']);
-            $address->setCity($userData['address']['city']);
-            $address->setZipcode($userData['address']['zipcode']);
-            $user->setAddress($address);
-
-            $entityManager->persist($user);
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['json_id' => $userData['json_id']]);
+            
+            if (!$existingUser) {
+                $user = new User();
+                $user->setJsonId($userData['json_id']);
+                $user->setName($userData['name']);
+                $user->setUsername($userData['username']);
+                $user->setEmail($userData['email']);
+                $user->setPhone($userData['phone']);
+                $user->setWebsite($userData['website']);
+                $address = new Address();
+                $address->setStreet($userData['address']['street']);
+                $address->setSuite($userData['address']['suite']);
+                $address->setCity($userData['address']['city']);
+                $address->setZipcode($userData['address']['zipcode']);
+                $user->setAddress($address);
+    
+                $entityManager->persist($user);
+            } else {
+                $userName = $userData['name'];
+                $this->addFlash('danger', 'User ' . $userName . ' was already in database!');
+            }
+            
         }
 
         $entityManager->flush();

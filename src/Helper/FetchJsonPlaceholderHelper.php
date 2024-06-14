@@ -42,7 +42,6 @@ class FetchJsonPlaceholderHelper
         return $content;
     }
 
-  
 
     public function fetchPosts(): array 
     {
