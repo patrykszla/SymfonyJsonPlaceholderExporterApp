@@ -21,6 +21,15 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+
+    public function findByJsonId(int $jsonId): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.json_id = :json_id')
+            ->setParameter('json_id', $jsonId)
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
