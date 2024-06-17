@@ -28,6 +28,7 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.json_id = :json_id')
             ->setParameter('json_id', $jsonId)
             ->getQuery()
+            ->setMaxResults(1)
             ->getResult();
     }
     //    /**

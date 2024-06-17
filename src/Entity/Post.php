@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,8 +14,10 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -27,14 +30,14 @@ class Post
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUser(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

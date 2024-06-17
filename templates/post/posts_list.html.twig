@@ -20,8 +20,7 @@
             {% for post in posts %}
                 <tr>
                     <th scope="row">{{ post.id }}</th>
-                    <td>test</td>
-                    {# <td>{{ post.user_name }}</td> #}
+                    <td>{{ post.user_name }}</td>
                     <td>{{ post.title }}</td>
                     <td>
                     {% if retreived_from_db == true %}
@@ -33,7 +32,7 @@
     </table>
 
     {% if retreived_from_db == false %}
-        <a href="{{ path('app_json_all_users_form') }}" class="btn btn-primary">Save all users</a>
+        <a href="{{ path('app_posts_handle_json_add') }}" class="btn btn-primary">Save all posts</a>
     {% endif %}
     
 
