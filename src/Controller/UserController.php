@@ -28,7 +28,7 @@ class UserController extends AbstractController
         $jsonUsers = $this->jsonHelper->fetchUsers();
         $currentRoute = $request->attributes->get('_route');
 
-        return $this->render('users_page/users_list.html.twig', [
+        return $this->render('user/users_list.html.twig', [
             'users' => $jsonUsers,
             'retreived_from_db' => false,
             'current_page_from_controller' => $currentRoute
@@ -65,7 +65,7 @@ class UserController extends AbstractController
         }
 
         $formAction = $this->generateUrl('app_users_form_handle');
-        return $this->render('users_page/users_form.html.twig', [
+        return $this->render('user/users_form.html.twig', [
             'users_forms' => $forms,
             'form_action' => $formAction,
             'current_page_from_controller' => $request->attributes->get('_route')
@@ -113,7 +113,7 @@ class UserController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
         $users = $userRepository->findAll();
         $currentRoute = $request->attributes->get('_route');
-        return $this->render('users_page/users_list.html.twig', [
+        return $this->render('user/users_list.html.twig', [
             'users' => $users,
             'retreived_from_db' => true,
             'current_page_from_controller' => $currentRoute
@@ -121,7 +121,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/edit/{id}', name: 'app_user_edit')]
-    public function showUserForm(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function handleUserEdit(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
         $user = $userRepository->find($id);
@@ -140,7 +140,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_users_list');
         }
 
-        return $this->render('users_page/user_form.html.twig', [
+        return $this->render('user/user_form.html.twig', [
             'user_form' => $form->createView(),
         ]);
     }

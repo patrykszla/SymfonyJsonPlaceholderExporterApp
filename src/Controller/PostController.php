@@ -5,6 +5,8 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Helper\FetchJsonPlaceholderHelper;
+use App\Form\PostType;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,8 +75,31 @@ class PostController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_posts_list');
-       
     }
 
+    #[Route('/post/edit/{id}', name: 'app_post_edit')]
+    public function handlePostEdit(int $id,EntityManagerInterface $entityManager, Request $request): Response 
+    {
+        $postRepository = $entityManager->getRepository(Post::class);
+        $post = $postRepository->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException('No post found for id ' . $id);
+        }
+
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $this->addFlash('success', "Post {$id} updated successfully!");
+
+            return $this->redirectToRoute('app_posts_list');
+        }
+
+        return $this->render('post/post_form.html.twig', [
+            'post_form' => $form->createView(),
+        ]);
+    }
 
 }
