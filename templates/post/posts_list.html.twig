@@ -20,7 +20,7 @@
             {% for post in posts %}
                 <tr>
                     <th scope="row">{{ post.id }}</th>
-                    <td>{{ post.user_name }}</td>
+                    <td>{{ post.user.name }}</td>
                     <td>{{ post.title }}</td>
                     <td>
                     {% if retreived_from_db == true %}

@@ -26,13 +26,10 @@ class PostController extends AbstractController
     {
         $jsonPosts = $this->jsonHelper->fetchPosts();
 
-        $newPostsArray = [];
         foreach ($jsonPosts as $key => $val) {
             $users = $userRepository->findByJsonId($val['userId']);
-            
-            $jsonPosts[$key]['user_name'] = $users[0]->getName(); 
+            $jsonPosts[$key]['user'] = $users[0];
         }
-
 
         return $this->render('post/posts_list.html.twig', [
             'posts' => $jsonPosts,
@@ -46,19 +43,11 @@ class PostController extends AbstractController
     {
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findAll();
-        dd($posts);
-        // dd('Posts add!');
-        $jsonPosts = $this->jsonHelper->fetchPosts();
-        // dd($jsonPosts);
-        foreach ($jsonPosts as $key => $val) {
-            // $users = $userRepository->findByJsonId($val['userId']);
-            $jsonPosts[$key]['user_name'] = 'test';
-
-        }
+        // dd($posts);
 
 
         return $this->render('post/posts_list.html.twig', [
-            'posts' => $jsonPosts,
+            'posts' => $posts,
             'retreived_from_db' => true,
             'current_page_from_controller' => $request->attributes->get('_route'),
         ]);
@@ -77,19 +66,14 @@ class PostController extends AbstractController
                 $post->setUser($user);
                 $post->setTitle($val['title']);
                 $post->setBody($val['body']);
-                $entityManager->persist($user);
+                $entityManager->persist($post);
 
             }
         }
         $entityManager->flush();
 
         return $this->redirectToRoute('app_posts_list');
-        
-        // return $this->render('post/posts_list.html.twig', [
-        //     'posts' => $jsonPosts,
-        //     'retreived_from_db' => false,
-        //     'current_page_from_controller' => $request->attributes->get('_route'),
-        // ]);
+       
     }
 
 
