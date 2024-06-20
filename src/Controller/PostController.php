@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PostController extends AbstractController
 {
@@ -78,7 +79,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/edit/{id}', name: 'app_post_edit')]
-    public function handlePostEdit(int $id,EntityManagerInterface $entityManager, Request $request): Response 
+    public function handlePostEdit(int $id,EntityManagerInterface $entityManager, ValidatorInterface $validator, Request $request): Response 
     {
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->find($id);
@@ -89,7 +90,12 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
+        $errors = $validator->validate($request);
+        dd($errors);
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            
+
             $entityManager->persist($post);
             $entityManager->flush();
             $this->addFlash('success', "Post {$id} updated successfully!");

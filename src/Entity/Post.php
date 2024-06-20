@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Entity\User;
-use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -71,5 +73,11 @@ class Post
         $this->body = $body;
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addPropertyConstraint('user', new NotBlank());
+        $metadata->addPropertyConstraint('title', new NotBlank());
     }
 }
