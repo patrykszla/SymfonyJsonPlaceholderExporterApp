@@ -134,7 +134,6 @@ class User
 
     public function setAddress(?Address $address): static
     {
-        // set the owning side of the relation if necessary
         if ($address !== null && $address->getUser() !== $this) {
             $address->setUser($this);
         }
@@ -157,7 +156,6 @@ class User
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getUser() === $this) {
                 $post->setUser(null);
             }

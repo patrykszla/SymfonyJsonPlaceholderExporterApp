@@ -90,9 +90,9 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-        $errors = $validator->validate($request);
-        dd($errors);
+        // $errors = $validator->validate($request);
         if ($form->isSubmitted() && $form->isValid()) {
+        dd($form->isValid());
             
             
 

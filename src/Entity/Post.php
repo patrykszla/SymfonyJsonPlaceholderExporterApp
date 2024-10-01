@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ApiResource]
 class Post
 {
     #[ORM\Id]
@@ -77,7 +80,11 @@ class Post
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
-        $metadata->addPropertyConstraint('user', new NotBlank());
+        // $metadata->addPropertyConstraint('user', new NotBlank());
+        $metadata->addPropertyConstraint(
+            'title',
+            new Assert\Length(['min' => 3])
+        );
         $metadata->addPropertyConstraint('title', new NotBlank());
     }
 }
